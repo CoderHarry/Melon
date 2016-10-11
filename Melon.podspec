@@ -18,12 +18,10 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/CoderHarry/Melon"
   s.license      = "MIT"
   s.author       = { "Caiyanzhi" => "yanzhi_cai@163.com" }
-  s.platform     = :ios, "7.0"
-
   s.source       = { :git => "https://github.com/CoderHarry/Melon.git", :tag => s.version.to_s }
   s.social_media_url = 'http://weibo.com/u/3201454077'
 
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '8.0'
 
   s.source_files = 'Melon/*'
 
