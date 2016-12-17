@@ -13,8 +13,8 @@ pod update
 
 ### Requirements
 
-> iOS 7.0+
-> Xcode 8(Swift 3)
+* iOS 7.0+
+* [x] Xcode 8(Swift 3)
 
 ### Simple Using
 
