@@ -95,7 +95,9 @@ melon.cancel {
 ### future will support
 
 *1. Setting SSL pinning*
+
 *2. Queue*
+
 *3. Others...*
 
 #### Source install
