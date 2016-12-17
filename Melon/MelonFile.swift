@@ -11,36 +11,36 @@ import Foundation
 /**
  * Melon 上传文件的 struct.
  */
-extension Melon {
-    struct FormData {
+public extension Melon {
+    public struct FormData {
         
         /// 文件名.
-        var filename: String = ""
+        public var filename: String = ""
         
         /// 文件的类型. .jpg == image/jpeg
-        var mimeType: String!
+        public var mimeType: String!
         
         /// 对应服务端字段name.
-        var name: String!
+        public var name: String!
         
         /**
          *  以下两个字段必传一个.
          */
         /// 文件路径.
-        var fileURL:URL?
+        public var fileURL:URL?
         /// 文件的二进制流.
-        var data:Data?
+        public var data:Data?
         
-        init() {}
+        public init() {}
         
-        init(filename:String = "", mimeType:String, name:String, fileURL:URL) {
+        public  init(filename:String = "", mimeType:String, name:String, fileURL:URL) {
             self.filename = filename
             self.mimeType = mimeType
             self.name = name
             self.fileURL = fileURL
         }
         
-        init(filename:String = "", mimeType:String, name:String, fileData:Data) {
+        public init(filename:String = "", mimeType:String, name:String, fileData:Data) {
             self.filename = filename
             self.mimeType = mimeType
             self.name = name

@@ -8,11 +8,10 @@
 
 import Foundation
 
-
-extension Melon {
+public extension Melon {
     
     /// 请求方法.
-    enum HTTPMethod:String {
+    public enum HTTPMethod:String {
         case DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT
     }
     

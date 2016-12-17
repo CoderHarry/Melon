@@ -8,43 +8,43 @@
 
 import UIKit
 
-class Melon {
+public class Melon {
     fileprivate var melonManager:MelonManager!
     
-    static func build(HTTPMethod method: Melon.HTTPMethod, url: String) -> Melon {
+    public static func build(HTTPMethod method: Melon.HTTPMethod, url: String) -> Melon {
         let melon = Melon()
         melon.melonManager = MelonManager(url: url, method: method)
         return melon
     }
     
-    static func GET(_ url:String) -> Melon {
+    public static func GET(_ url:String) -> Melon {
         return build(HTTPMethod: .GET, url: url)
     }
     
-    static func POST(_ url:String) -> Melon {
+    public static func POST(_ url:String) -> Melon {
         return build(HTTPMethod: .POST, url: url)
     }
     
-    func addParams(_ params:[String: Any]) -> Melon {
+    public func addParams(_ params:[String: Any]) -> Melon {
         melonManager.addParams(params)
         return self
     }
     
-    func setTimeoutInterval(_ timeoutInterval:TimeInterval) {
+    public func setTimeoutInterval(_ timeoutInterval:TimeInterval) {
         melonManager.setTimeoutInterval(timeoutInterval)
     }
     
-    func addHeaders(_ headers: [String:String]) -> Melon {
+    public func addHeaders(_ headers: [String:String]) -> Melon {
         melonManager.addHeaders(headers)
         return self
     }
     
-    func setHTTPHeader(_ key: String, _ value: String) -> Melon {
+    public func setHTTPHeader(_ key: String, _ value: String) -> Melon {
         melonManager.setHTTPHeader(key, value)
         return self
     }
     
-    func cancel(_ callback: (() -> Void)? = nil) {
+    public func cancel(_ callback: (() -> Void)? = nil) {
         melonManager.cancelCallback = callback
         melonManager.task.cancel()
     }
@@ -54,7 +54,7 @@ class Melon {
 // MARK: - call back
 
 extension Melon {
-    func responseString(_ callback: ((_ jsonString:String?, _ response:HTTPURLResponse?)->Void)?) -> Melon {
+    public func responseString(_ callback: ((_ jsonString:String?, _ response:HTTPURLResponse?)->Void)?) -> Melon {
         return responseData({ (data, response) in
             if let data = data {
                 
@@ -67,7 +67,7 @@ extension Melon {
         })
     }
     
-    func responseJSON(_ callback: ((_ jsonObject:Any?, _ response:HTTPURLResponse?)->Void)?) -> Melon {
+    public func responseJSON(_ callback: ((_ jsonObject:Any?, _ response:HTTPURLResponse?)->Void)?) -> Melon {
         return responseData { (data, response) in
             if let data = data {
                 let object = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
@@ -81,16 +81,16 @@ extension Melon {
         }
     }
     
-    func responseData(_ callback:((_ data:Data?, _ response:HTTPURLResponse?) -> Void)?) -> Melon {
+    public func responseData(_ callback:((_ data:Data?, _ response:HTTPURLResponse?) -> Void)?) -> Melon {
         melonManager.fire(callback)
         return self
     }
     
-    func responseXML() -> Melon {
+    public func responseXML() -> Melon {
         return self
     }
     
-    func onNetworkError(_ errorCallback: ((_ error:NSError)->Void)?) -> Melon {
+    public func onNetworkError(_ errorCallback: ((_ error:NSError)->Void)?) -> Melon {
         melonManager.addErrorCallback(errorCallback)
         return self
     }
@@ -99,13 +99,13 @@ extension Melon {
 
 // MARK: - upload Methods
 
-extension Melon {
-    func uploadProgress(_ uploadProgress:((_ bytesSent: Int64, _ totalBytesSent: Int64, _ totalBytesExpectedToSend: Int64)->Void)?) -> Melon {
+public extension Melon {
+    public func uploadProgress(_ uploadProgress:((_ bytesSent: Int64, _ totalBytesSent: Int64, _ totalBytesExpectedToSend: Int64)->Void)?) -> Melon {
         melonManager.addUploadProgressCallback(uploadProgress)
         return self
     }
     
-    func addFiles(_ formdatas: [Melon.FormData]) -> Melon {
+    public func addFiles(_ formdatas: [Melon.FormData]) -> Melon {
         melonManager.addFiles(formdatas)
         return self
     }
@@ -113,14 +113,14 @@ extension Melon {
 
 // MARK: - download Methods
 
-extension Melon {
-    static func Download(_ url:String) -> Melon {
+public extension Melon {
+    public static func Download(_ url:String) -> Melon {
         let melon = Melon()
         melon.melonManager = MelonManager(downloadUrl: url)
         return melon
     }
     
-    func downloadProgress(_ downloadProgress:((_ bytesWritten: Int64, _ totalBytesWritten: Int64, _ totalBytesExpectedToWrite: Int64) -> Void)?) -> Melon {
+    public func downloadProgress(_ downloadProgress:((_ bytesWritten: Int64, _ totalBytesWritten: Int64, _ totalBytesExpectedToWrite: Int64) -> Void)?) -> Melon {
         melonManager.addDownloadProgressCallback(downloadProgress)
         return self
     }
