@@ -25,10 +25,10 @@ class MelonManager:NSObject {
     fileprivate var method:String!
     
     /// 请求参数.
-    fileprivate var params: [String: Any]?
+    fileprivate var params: [String: Any] = [:]
     
     /// 请求文件的对象.
-    fileprivate var formDatas:[Melon.FormData]?
+    fileprivate var formDatas:[Melon.FormData] = []
     
     /// 请求头.
     fileprivate var httpHeaders:[String: String] = [:]
@@ -81,10 +81,14 @@ class MelonManager:NSObject {
 
     func addParams(_ params: [String: Any]) {
         self.params = params
+        
+        Melon.Print("请求参数:\n\(params)")
     }
     
     func addFiles(_ formDatas:[Melon.FormData]?) {
-        self.formDatas = formDatas
+        if let formDatas = formDatas {
+            self.formDatas = formDatas
+        }
     }
     
     func addUploadProgressCallback(_ uploadProgressCallback:UploadProgressCallback?) {
@@ -119,6 +123,9 @@ class MelonManager:NSObject {
         buildRequest()
         buildHeaders()
         buildHttpBody()
+        
+        Melon.Print("这是\(method!)请求,请求地址:\(url!)\nheaders: \(httpHeaders)")
+        
         fireTask()
     }
 }
@@ -131,8 +138,8 @@ extension MelonManager {
     
     fileprivate func buildRequest() {
         // 拼接URL
-        if method == "GET" && params?.count > 0 {
-            request = URLRequest(url: URL(string: url + "?" + Melon.Tools.buildParams(params!))!)
+        if method == "GET" && params.count > 0 {
+            request = URLRequest(url: URL(string: url + "?" + Melon.Tools.buildParams(params))!)
         }
         
         // 设置请求方法.
@@ -141,8 +148,8 @@ extension MelonManager {
     
     fileprivate func buildHeaders() {
         // 设置请求头.
-        if method == "POST" && params?.count > 0 {
-            if formDatas?.count > 0 {
+        if method == "POST" && params.count > 0 {
+            if formDatas.count > 0 {
                 request.addValue("multipart/form-data; boundary=\(Const.boundary)", forHTTPHeaderField: "Content-Type")
             } else {
                 request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
@@ -155,48 +162,46 @@ extension MelonManager {
     fileprivate func buildHttpBody() {
         var data = Data()
         
-        if formDatas?.count > 0  {
+        if formDatas.count > 0  {
             if method == "GET" {
                 Melon.Print("\n\n---------------------\n The remote server may not accept GET method with Http body. But Melon will send it anyway.\n ---------------------")
             }
             
-            if let params = params {
-                for (key, value) in params {
-                    data.append("--\(Const.boundary)\r\n".data(using: .utf8)!)
-                    data.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
-                    data.append("\((value as AnyObject).description!)\r\n".data(using: .utf8)!)
-                }
+            for (key, value) in params {
+                data.append("--\(Const.boundary)\r\n".data(using: .utf8)!)
+                data.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
+                data.append("\((value as AnyObject).description!)\r\n".data(using: .utf8)!)
             }
             
-            if let formDatas = formDatas {
-                for formdata in formDatas {
-                    data.append("--\(Const.boundary)\r\n".data(using: .utf8)!)
-                    
-                    let name = formdata.name
-                    let filename = formdata.filename
-                    data.append("Content-Disposition: form-data; name=\"\(name)\"; filename=\"\(filename)\"\r\n".data(using: .utf8)!)
-                    data.append("Content-Type: \(formdata.mimeType)\r\n".data(using: .utf8)!)
+            
+            for formdata in formDatas {
+                data.append("--\(Const.boundary)\r\n".data(using: .utf8)!)
+                
+                let name = formdata.name
+                let filename = formdata.filename
+                data.append("Content-Disposition: form-data; name=\"\(name)\"; filename=\"\(filename)\"\r\n".data(using: .utf8)!)
+                data.append("Content-Type: \(formdata.mimeType)\r\n".data(using: .utf8)!)
+                data.append("\r\n".data(using: .utf8)!)
+                
+                if let fileData = formdata.data {
+                    data.append(fileData)
                     data.append("\r\n".data(using: .utf8)!)
-                    
-                    if let fileData = formdata.data {
+                }
+                
+                if let fileURL = formdata.fileURL {
+                    if let fileData = try? Data(contentsOf: fileURL) {
                         data.append(fileData)
                         data.append("\r\n".data(using: .utf8)!)
                     }
-                    
-                    if let fileURL = formdata.fileURL {
-                        if let fileData = try? Data(contentsOf: fileURL) {
-                            data.append(fileData)
-                            data.append("\r\n".data(using: .utf8)!)
-                        }
-                    }
                 }
             }
+            
             
             data.append("--\(Const.boundary)--\r\n".data(using: .utf8)!)
             
         } else {
-            if params?.count > 0 && method == "POST" {
-                data.append(Melon.Tools.buildParams(params!).data(using: .utf8)!)
+            if params.count > 0 && method == "POST" {
+                data.append(Melon.Tools.buildParams(params).data(using: .utf8)!)
             }
         }
 
@@ -222,6 +227,9 @@ extension MelonManager {
         task = session.dataTask(with: request) { [weak self] (data, response, error) in
             if let error = error as? NSError {
                 self?.handleError(error)
+                
+                Melon.Print("URLResponse 请求失败:\(error.debugDescription) ")
+                
             } else {
                 DispatchQueue.main.async {
                     self?.successCallback?(data, response as? HTTPURLResponse)
@@ -279,8 +287,20 @@ extension MelonManager: URLSessionDownloadDelegate {
             handleError(error)
         }
     }
+    
+    /*
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        if challenge.protectionSpace.authenticationMethod != "NSURLAuthenticationMethodServerTrust" {
+            return
+        }
+        
+        completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+    }
+     */
 }
 
+/*
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?):
@@ -300,4 +320,4 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
         return rhs < lhs
     }
 }
-
+*/

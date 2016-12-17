@@ -18,10 +18,10 @@ extension Melon {
         var filename: String = ""
         
         /// 文件的类型. .jpg == image/jpeg
-        let mimeType: String
+        var mimeType: String!
         
         /// 对应服务端字段name.
-        let name: String
+        var name: String!
         
         /**
          *  以下两个字段必传一个.
@@ -31,6 +31,7 @@ extension Melon {
         /// 文件的二进制流.
         var data:Data?
         
+        init() {}
         
         init(filename:String = "", mimeType:String, name:String, fileURL:URL) {
             self.filename = filename
