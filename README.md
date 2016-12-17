@@ -14,7 +14,7 @@ pod update
 ### Requirements
 
 * iOS 7.0+
-* [x] Xcode 8(Swift 3)
+* Xcode 8(Swift 3)
 
 ### Simple Using
 
@@ -95,7 +95,9 @@ melon.cancel {
 ### future will support
 
 *1. Setting SSL pinning*
+
 *2. Queue*
+
 *3. Others...*
 
 #### Source install
