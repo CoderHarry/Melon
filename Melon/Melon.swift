@@ -17,7 +17,7 @@ public class Melon {
         return melon
     }
     
-    public static init() {}
+    public init() {}
     
     public static func GET(_ url:String) -> Melon {
         return build(HTTPMethod: .GET, url: url)
