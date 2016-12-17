@@ -92,9 +92,9 @@ melon.cancel {
 }
 ```
 
-### future will Support
+### future will support
 
 > Setting SSL pinning
 > Queue
-
+> Others
 
