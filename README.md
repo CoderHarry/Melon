@@ -98,3 +98,9 @@ melon.cancel {
 *2. Queue*
 *3. Others...*
 
+#### Source install
+
+```
+Clone all files in the Melon directory into your project.
+```
+
