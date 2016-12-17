@@ -11,12 +11,10 @@ pod 'Melon', '~> 1.0.1'
 pod update
 ```
 
-
 ### Requirements
 
 > iOS 7.0+
 > Xcode 8(Swift 3)
-
 
 ### Simple Using
 
@@ -93,8 +91,6 @@ melon.cancel {
 	// cancel callback
 }
 ```
-
-
 
 ### future will Support
 
