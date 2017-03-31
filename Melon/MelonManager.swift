@@ -81,8 +81,6 @@ class MelonManager:NSObject {
 
     func addParams(_ params: [String: Any]) {
         self.params = params
-        
-        Melon.Print("请求参数:\n\(params)")
     }
     
     func addFiles(_ formDatas:[Melon.FormData]?) {
@@ -124,8 +122,6 @@ class MelonManager:NSObject {
         buildHeaders()
         buildHttpBody()
         
-        Melon.Print("这是\(method!)请求,请求地址:\(url!)\nheaders: \(httpHeaders)")
-        
         fireTask()
     }
 }
@@ -163,9 +159,7 @@ extension MelonManager {
         var data = Data()
         
         if formDatas.count > 0  {
-            if method == "GET" {
-                Melon.Print("\n\n---------------------\n The remote server may not accept GET method with Http body. But Melon will send it anyway.\n ---------------------")
-            }
+            if method == "GET" {}
             
             for (key, value) in params {
                 data.append("--\(Const.boundary)\r\n".data(using: .utf8)!)
@@ -228,8 +222,6 @@ extension MelonManager {
             if let error = error as NSError? {
                 self?.handleError(error)
                 
-                Melon.Print("URLResponse 请求失败:\(error.debugDescription) ")
-                
             } else {
                 DispatchQueue.main.async {
                     self?.successCallback?(data, response as? HTTPURLResponse)
@@ -247,7 +239,6 @@ extension MelonManager {
             }
         } else {
             let e = NSError(domain: Const.errorDomain, code: error.code, userInfo: error.userInfo)
-            Melon.Print("Melon Error: ", e.localizedDescription)
             DispatchQueue.main.async {  [weak self] in
                 self?.errorCallback?(e)
                 self?.session.finishTasksAndInvalidate()

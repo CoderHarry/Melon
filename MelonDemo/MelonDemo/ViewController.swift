@@ -67,8 +67,7 @@ class ViewController: UIViewController {
             .addParams(["name": "caiyanzhi", "age":26])
             .addFiles([formdata])
             .uploadProgress({ (bytesSent, totalBytesSent, totalBytesExpectedToSend) in
-                Melon.Print("totalBytesSent:\(totalBytesSent)")
-                Melon.Print("totalBytesExpectedToSend:\(totalBytesExpectedToSend)")
+
             })
             .onNetworkError({ error in
                 // 请求失败的方法

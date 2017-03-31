@@ -75,8 +75,6 @@ extension Melon {
                 let object = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
                 callback?(object, response)
                 
-                Melon.Print("JSON返回: response: \(String(describing: response)) \n reponseObject:\(String(describing: object))")
-                
             } else {
                 callback?(nil, response)
             }
