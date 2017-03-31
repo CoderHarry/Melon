@@ -179,7 +179,7 @@ extension MelonManager {
                 
                 let name = formdata.name
                 let filename = formdata.filename
-                data.append("Content-Disposition: form-data; name=\"\(name)\"; filename=\"\(filename)\"\r\n".data(using: .utf8)!)
+                data.append("Content-Disposition: form-data; name=\"\(String(describing: name))\"; filename=\"\(filename)\"\r\n".data(using: .utf8)!)
                 data.append("Content-Type: \(formdata.mimeType)\r\n".data(using: .utf8)!)
                 data.append("\r\n".data(using: .utf8)!)
                 
@@ -225,7 +225,7 @@ extension MelonManager {
     
     fileprivate func startRequest() {
         task = session.dataTask(with: request) { [weak self] (data, response, error) in
-            if let error = error as? NSError {
+            if let error = error as NSError? {
                 self?.handleError(error)
                 
                 Melon.Print("URLResponse 请求失败:\(error.debugDescription) ")
@@ -283,7 +283,7 @@ extension MelonManager: URLSessionDownloadDelegate {
     
     @objc(URLSession:task:didCompleteWithError:)
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        if let error = error as? NSError {
+        if let error = error as NSError? {
             handleError(error)
         }
     }

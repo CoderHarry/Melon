@@ -37,7 +37,7 @@ class ViewController: UIViewController {
                 .onNetworkError({ error in
                     // 请求失败的方法
                 }).responseJSON { (jsonObject, response) in
-                   print("jsonObject : \(jsonObject)" )
+                   print("jsonObject : \(String(describing: jsonObject))" )
         }
         
         print(melon)
@@ -51,7 +51,7 @@ class ViewController: UIViewController {
                 .onNetworkError({ error in
                     // 请求失败的方法
                 }).responseJSON { (jsonObject, response) in
-                    print("jsonObject : \(jsonObject)")
+                    print("jsonObject : \(String(describing: jsonObject))")
         }
         
         print(melon)
@@ -73,7 +73,7 @@ class ViewController: UIViewController {
             .onNetworkError({ error in
                 // 请求失败的方法
             }).responseJSON { (jsonObject, response) in
-                print("jsonObject : \(jsonObject)")
+                print("jsonObject : \(String(describing: jsonObject))")
         }
         
         print(melon)
@@ -91,7 +91,7 @@ class ViewController: UIViewController {
         }).responseData { (data, reponse) in
             if let data = data {
                 let image = UIImage(data: data)
-                print("image: \(image)")
+                print("image: \(String(describing: image))")
             }
         }
         
